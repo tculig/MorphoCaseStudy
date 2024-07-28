@@ -3,12 +3,10 @@ import type { FC } from 'react';
 import Image from "next/image";
 import lightIcon from "../../assets/light.svg";
 import { AddressBadge } from './addressBadge';
+import { useAccount } from 'wagmi';
 
-interface Props {
-    readonly address?: string;
-}
-
-const TopNav: FC<Props> = ({ address = "0x0123456789123" }) => {
+const TopNav: FC = () => {
+    const { address } = useAccount();
     return (
         <div className="flex justify-between h-12 border-b w-full items-center px-10">
             <div className="flex items-center">

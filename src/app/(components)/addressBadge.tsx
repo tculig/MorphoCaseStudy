@@ -12,11 +12,11 @@ const AddressBadge: FC<Props> = ({ address = "0x0", semaforColorClassName = "bg-
 
         </div>
     </div>;
-    return <div className="flex w-[110px] h-[26px] rounded-[3px] bg-[#191D200F] items-center p-1">
+    return <button className="flex w-[110px] h-[26px] rounded-[3px] bg-[#191D200F] items-center p-1">
         {semafor}
         <div className="pl-1 text-[11px] font-medium leading-4 overflow-hidden text-ellipsis">{address}</div>
         <div className="pr-1 text-[11px] font-medium leading-4">{address.substring(address.length-4)}</div>
-    </div>
+    </button>
 }
 export { AddressBadge };
 

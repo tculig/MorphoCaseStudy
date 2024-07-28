@@ -4,7 +4,7 @@ import { useState } from "react";
 import { InputCard } from "../(components)/inputCard";
 import { TopNav } from "../(components)/topNav";
 
-export default function Home() {
+export default function InputPage() {
   const [inputText, setInputText] = useState('');
 
   return (

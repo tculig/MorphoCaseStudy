@@ -1,12 +1,16 @@
+'use client';
+
 import Image from "next/image";
 import lightIcon from "../assets/light.svg";
 import alertIcon from "../assets/alert.svg";
 import { RainbowButton } from "./(components)/rainbowButton";
 import { BoxCard } from "./(components)/boxCard";
 import { useMemo } from "react";
+import { useWeb3Modal } from "@web3modal/wagmi/react";
 
 export default function Home() {
   const isLoading = false;
+  const { open, close } = useWeb3Modal();
 
   const defaultCard = useMemo(() => {
     return <BoxCard
@@ -18,9 +22,9 @@ export default function Home() {
       />}
       header="Welcome to Morpho"
       text="To get started, please connect your wallet bellow"
-      button={isLoading ? <RainbowButton text="Loading..." disabled={true} /> : <RainbowButton text="Connect Wallet" />}
+      button={isLoading ? <RainbowButton text="Loading..." disabled={true} /> : <RainbowButton text="Connect Wallet" onClick={()=>open()}/>}
     />;
-  }, [isLoading]);
+  }, [isLoading, open]);
 
   const wrongNetworkCard = useMemo(() => {
     return <BoxCard

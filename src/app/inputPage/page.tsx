@@ -1,3 +1,5 @@
+'use client';
+
 import { useState } from "react";
 import { InputCard } from "../(components)/inputCard";
 import { TopNav } from "../(components)/topNav";

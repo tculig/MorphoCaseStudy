@@ -1,4 +1,5 @@
-import type { FC, ReactNode } from 'react';
+'use client';
+import type { FC } from 'react';
 import Image from "next/image";
 import lightIcon from "../../assets/light.svg";
 import { AddressBadge } from './addressBadge';

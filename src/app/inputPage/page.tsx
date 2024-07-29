@@ -3,14 +3,15 @@
 import { useEffect, useState } from "react";
 import { InputCard } from "../../components/inputCard";
 import { TopNav } from "../../components/topNav";
-import metaMorphoFactoryAbi from "../../abi/metaMorphoFactory.json";
-import metaMorphoAbi from "../../abi/metaMorpho.json";
-import ERC20Abi from "../../abi/ERC20.json";
+import metaMorphoFactoryAbi from "../../abi/metaMorphoFactory";
+import metaMorphoAbi from "../../abi/metaMorpho";
+import ERC20Abi from "../../abi/ERC20";
 import { useAccount, useReadContract, useReadContracts } from "wagmi";
 import { useDebounce } from "use-debounce";
 import { publicClient } from '../clients'
 import { getContract } from "viem";
 import { useVaultData } from "@/hooks/useVaultData";
+import { redirect } from "next/navigation";
 
 const metaMorphoContract = {
   address: '0x38989bba00bdf8181f4082995b3deae96163ac5d',
@@ -30,13 +31,18 @@ export default function InputPage() {
     abi: metaMorphoFactoryAbi,
     address: '0xA9c3D3a366466Fa809d1Ae982Fb2c46E5fC41101',
     functionName: 'isMetaMorpho',
-    args: [inputDebounced],
+    args: [inputDebounced as any],
   });
 
   const vaultData = useVaultData({
     addressVault: inputDebounced, 
     addressUser: address,
+    enabled: !!isValidVault,
   });
+
+  useEffect(()=>{
+    if(!address) redirect(`/connectPage`);
+  }, [address])
 
   console.log(vaultData)
 

@@ -1,4 +1,4 @@
-[
+const abi = [
     {
         "inputs": [
             {
@@ -143,4 +143,6 @@
         "stateMutability": "payable",
         "type": "receive"
     }
-]
+] as const;
+
+export default abi;

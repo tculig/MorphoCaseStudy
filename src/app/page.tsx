@@ -1,18 +1,19 @@
 'use client';
 
-import Image from "next/image";
-import lightIcon from "../assets/light.svg";
-import alertIcon from "../assets/alert.svg";
-import { RainbowButton } from "./(components)/rainbowButton";
-import { BoxCard } from "./(components)/boxCard";
-import { useMemo } from "react";
-import { useWeb3Modal, useWeb3ModalState } from "@web3modal/wagmi/react";
 import { useAccount } from "wagmi";
+import ConnectPage from "./connectPage/page";
 import InputPage from "./inputPage/page";
+import { useEffect } from "react";
+import { redirect } from "next/navigation";
 
 export default function Home() {
-  return (
-    <InputPage/>
-  );
+
+  const { address } = useAccount();
+
+  useEffect(()=>{
+    address ? redirect(`/inputPage`) : redirect(`/connectPage`)
+  }, [address])
+
+  return null;
 }
 

@@ -11,7 +11,9 @@ import {
     QueryClient,
     QueryClientProvider,
 } from '@tanstack/react-query'
-import { defineChain, http } from "viem";
+import { createPublicClient, defineChain, http } from "viem";
+import { mainnet as mainnetViem} from "viem/chains";
+
 export const tenderlyChain = defineChain({
     id: 1,
     name: 'Tenderly',
@@ -47,6 +49,11 @@ const wagmiConfig = createConfig({
 
 createWeb3Modal({ wagmiConfig, projectId });
 const queryClient = new QueryClient()
+
+const client = createPublicClient({ 
+  chain: mainnetViem, 
+  transport: http(`https://virtual.mainnet.rpc.tenderly.co/${publicRPC}`) 
+}) 
 
 const Providers: FC<PropsWithChildren> = ({ children }) => {
     const [ready, setReady] = useState(false);

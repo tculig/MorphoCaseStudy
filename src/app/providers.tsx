@@ -21,9 +21,22 @@ const wagmiConfig = defaultWagmiConfig({ chains, projectId, metadata: metadataWa
 
 createWeb3Modal({ wagmiConfig, projectId });
 
-const Providers: FC<PropsWithChildren> = ({ children }) =>
-    <WagmiProvider config={wagmiConfig}>
-        {children}
-    </WagmiProvider>
+const Providers: FC<PropsWithChildren> = ({ children }) => {
+    const [ready, setReady] = useState(false);
+
+    useEffect(() => {
+        setReady(true);
+    }, []);
+    return (
+        <>
+            {ready ? (
+                <WagmiProvider config={wagmiConfig}>
+                    {children}
+                </WagmiProvider>
+            ) : null}
+        </>
+    );
+}
+
 
 export { Providers }

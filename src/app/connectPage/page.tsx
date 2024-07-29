@@ -1,8 +1,8 @@
 'use client';
 
 import Image from "next/image";
-import lightIcon from "../assets/light.svg";
-import alertIcon from "../assets/alert.svg";
+import lightIcon from "../../assets/light.svg";
+import alertIcon from "../../assets/alert.svg";
 import { RainbowButton } from "../(components)/rainbowButton";
 import { BoxCard } from "../(components)/boxCard";
 import { useMemo } from "react";

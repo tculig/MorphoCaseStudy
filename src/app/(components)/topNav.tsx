@@ -3,10 +3,14 @@ import type { FC } from 'react';
 import Image from "next/image";
 import lightIcon from "../../assets/light.svg";
 import { AddressBadge } from './addressBadge';
-import { useAccount } from 'wagmi';
+import { useAccount, useBalance } from 'wagmi';
 
 const TopNav: FC = () => {
     const { address } = useAccount();
+    /*const { data: balanceData } = useBalance({
+        address: address,
+      });
+      console.log(balanceData)*/
     return (
         <div className="flex justify-between h-12 border-b w-full items-center px-10">
             <div className="flex items-center">

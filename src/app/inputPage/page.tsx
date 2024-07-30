@@ -10,6 +10,7 @@ import { useVaultData } from "@/hooks/useVaultData";
 import { redirect } from "next/navigation";
 import { BoxCard } from "@/components/boxCard";
 import { RainbowButton } from "@/components/rainbowButton";
+import { CustomInput } from "@/components/customInput";
 
 
 export default function InputPage() {
@@ -39,10 +40,15 @@ export default function InputPage() {
   return (
     <main className="flex flex-col min-h-screen items-center bg-[#F0F2F7]">
       <TopNav />
-      <InputCard
-        inputText={inputText}
-        setInputText={setInputText}
-      />
+      <div className="flex flex-col p-6 pt-12 w-[350px] h-40 shadow-[0px_3px_12px_0px_#00000017] mt-48 border bg-[#FAFCFF] rounded-lg border-solid border-[#191D2026]">
+        <label className="text-xs font-medium leading-4 mb-2">MetaMorpho Address</label>
+        <CustomInput
+          inputText={inputText}
+          setInputText={setInputText}
+          isValid={!!isValidVault}
+          isInvalid={inputDebounced != "" && !isValidVault}
+        />
+      </div>
       {vaultData ?
         <BoxCard
           className="mt-8"

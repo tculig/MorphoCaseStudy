@@ -30,7 +30,8 @@ export default function ConnectPage() {
       />}
       header="Welcome to Morpho"
       text="To get started, please connect your wallet bellow"
-      button={isOpen ? <RainbowButton text="Loading..." disabled={true} /> : <RainbowButton text="Connect Wallet" onClick={() => open()} />}
+      footer={isOpen ? <RainbowButton text="Loading..." disabled={true} /> : <RainbowButton text="Connect Wallet" onClick={() => open()} />}
+      className="mt-64 items-center"
     />;
   }, [isOpen, open]);
 
@@ -44,7 +45,8 @@ export default function ConnectPage() {
       />}
       header="Wrong network"
       text="You are not on Mainnet. Please click the button below to switch."
-      button={<RainbowButton text="Switch" onClick={() => open({ view: 'Networks' })} />}
+      footer={<RainbowButton text="Switch" onClick={() => open({ view: 'Networks' })} />}
+      className="mt-64 items-center"
     />;
   }, [open]);
 

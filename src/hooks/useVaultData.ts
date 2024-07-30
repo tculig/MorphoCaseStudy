@@ -60,8 +60,8 @@ const useVaultData = ({ addressVault, addressUser, enabled }: VaultParams): Vaul
         const assetSymbol = await asset.read.symbol();
         const assetDecimals = await asset.read.decimals();
 
-        const formattedShares = userShares ? roundToDecimals(formatUnits(userShares, vaultDecimals),2).toFixed(2) : undefined; 
-        const formattedAssets = userAssets ? roundToDecimals(formatUnits(userAssets, assetDecimals),2).toFixed(2) : undefined;
+        const formattedShares = userShares ? roundToDecimals(formatUnits(userShares, vaultDecimals), 2).toFixed(2) : undefined;
+        const formattedAssets = userAssets ? roundToDecimals(formatUnits(userAssets, assetDecimals), 2).toFixed(2) : undefined;
 
         setData({
           vaultName,

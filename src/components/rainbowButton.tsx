@@ -8,13 +8,13 @@ interface Props {
     readonly className?: string;
 }
 
-const RainbowButton : FC<Props> = ({ text, className: additionalClassName, onClick, disabled=false }) =>
+const RainbowButton: FC<Props> = ({ text, className: additionalClassName, onClick, disabled = false }) =>
     <button
         onClick={onClick}
         disabled={disabled}
         type="button"
         className={("rainbow-button ").concat(additionalClassName ?? "")}>
-    {text}
+        {text}
     </button>
 
 export { RainbowButton };

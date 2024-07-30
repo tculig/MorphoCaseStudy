@@ -7,7 +7,7 @@ import { RainbowButton } from "../../components/rainbowButton";
 import { BoxCard } from "../../components/boxCard";
 import { useEffect, useMemo } from "react";
 import { useWeb3Modal, useWeb3ModalState } from "@web3modal/wagmi/react";
-import { useAccount, useBalance, useReadContract } from "wagmi";
+import { useAccount } from "wagmi";
 
 import { redirect } from "next/navigation";
 
@@ -15,10 +15,6 @@ export default function ConnectPage() {
   const { open } = useWeb3Modal();
   const { open: isOpen, selectedNetworkId } = useWeb3ModalState();
   const { address } = useAccount();
- /* const { data: balanceData } = useBalance({
-    address: "0xBEEF01735c132Ada46AA9aA4c54623cAA92A64CB",
-  });
-  console.log(balanceData)*/
 
   const defaultCard = useMemo(() => {
     return <BoxCard

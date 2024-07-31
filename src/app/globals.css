@@ -18,6 +18,15 @@
 }
 
 body {
+
+
+  overflow: hidden; 
+
+
+
+
+
+
   color: rgb(var(--foreground-rgb));
   background: linear-gradient(
       to bottom,
@@ -32,7 +41,7 @@ body {
     text-wrap: balance;
   }
   .rainbow-button {
-      @apply leading-8 p-1 w-full rounded text-[white] 
+      @apply w-full rounded text-[white] text-[13px] font-normal leading-8 
              bg-[linear-gradient(223.53deg,rgba(165,254,202,0.8)_3.65%,rgba(62,220,235,0.8)_31.56%,rgba(37,148,255,0.8)_65.16%,rgba(85,51,255,0.8)_102.22%)]
              hover:bg-[linear-gradient(223.53deg,rgba(165,254,202,0.9)_3.65%,rgba(62,220,235,0.9)_31.56%,rgba(37,148,255,0.9)_65.16%,rgba(85,51,255,0.9)_102.22%)] 
              active:bg-[linear-gradient(223.53deg,#A5FECA_3.65%,#3EDCEB_31.56%,#2594FF_65.16%,#5533FF_102.22%)]

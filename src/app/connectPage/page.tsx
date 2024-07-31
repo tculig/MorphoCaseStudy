@@ -25,7 +25,7 @@ export default function ConnectPage() {
         priority
       />}
       header="Welcome to Morpho"
-      text="To get started, please connect your wallet bellow"
+      text="To get started, please connect your wallet below"
       footer={isOpen ? <RainbowButton text="Loading..." disabled={true} /> : <RainbowButton text="Connect Wallet" onClick={() => open()} />}
       className="mt-64 items-center"
     />;

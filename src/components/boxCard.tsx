@@ -27,8 +27,3 @@ const BoxCard: FC<PropsWithChildren<Props>> = ({ icon, header, text, footer, chi
 }
 
 export { BoxCard };
-
-/*
- <div className="w-full opacity-0" style={{ height:"100%", position: "absolute", top: "6px", left: "96px", backgroundImage: "url('https://postimage.me/images/2024/07/31/m1.png')" }}>
-            </div>
-*/

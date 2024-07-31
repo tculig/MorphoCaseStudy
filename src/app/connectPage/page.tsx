@@ -49,8 +49,8 @@ export default function ConnectPage() {
   const isWrongNetwork = address && (selectedNetworkId as string) != "1";
 
   useEffect(()=>{
-    if(address) redirect(`/inputPage`);
-  }, [address])
+    if(address && !isWrongNetwork) redirect(`/inputPage`);
+  }, [address, isWrongNetwork])
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-between bg-[#F0F2F7]">

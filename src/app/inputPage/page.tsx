@@ -7,7 +7,7 @@ import { useAccount, useReadContract } from "wagmi";
 import { useDebounce } from "use-debounce";
 import { useVaultData } from "@/hooks/useVaultData";
 import { redirect } from "next/navigation";
-import { BoxCard } from "@/components/boxCard";
+import { WithdrawCard } from "@/components/withdrawCard";
 import { RainbowButton } from "@/components/rainbowButton";
 import { CustomInput } from "@/components/customInput";
 import { Hash, TransactionReceipt } from "viem";
@@ -16,7 +16,7 @@ import { publicClient, walletClient } from "../clients";
 import { TransactionCard } from "@/components/transactionCard";
 
 export default function InputPage() {
-  const [inputText, setInputText] = useState('0xBEEF01735c132Ada46AA9aA4c54623cAA92A64CB');
+  const [inputText, setInputText] = useState('');
   const [inputDebounced] = useDebounce(inputText, 500);
   const { address } = useAccount();
   const [hash, setHash] = useState<Hash>();
@@ -65,7 +65,7 @@ export default function InputPage() {
   }, [hash])
 
   const InputComponent = (
-    <div key="inputComponent" className="flex flex-col p-6 pt-12 w-[350px] h-40 shadow-[0px_3px_12px_0px_#00000017] mt-48 border bg-[#FAFCFF] rounded-lg border-solid border-[#191D2026]">
+    <div key="inputComponent" className="flex flex-col p-5 pt-12 w-[350px] h-40 shadow-[0px_3px_12px_0px_#00000017] mt-48 border bg-[#FAFCFF] rounded-lg border-solid border-[#191D2026]">
       <label className="text-xs font-medium leading-4 mb-2">MetaMorpho Address</label>
       <CustomInput
         inputText={inputText}
@@ -78,19 +78,19 @@ export default function InputPage() {
 
   const WithdrawComponent = (
     vaultData ?
-      <BoxCard
+      <WithdrawCard
         key="withdrawComponent"
-        className="mt-8"
+        className="mt-6"
         header="Flagship ETH"
         footer={<RainbowButton text="Withdraw userMax" onClick={() => redeem()} disabled={Number(vaultData.userMaxRedeem) == 0} />}
       >
-        <div className="pt-6 pb-8">
+        <div className="pt-5 pb-8">
           <div className="text-[11px] pb-1 font-medium leading-4 text-[#191D2080]">User shares</div>
-          <div className="text-sm pb-2 font-normal leading-5 text-[#191D20F2]">{vaultData.formattedShares} {vaultData.vaultSymbol}</div>
+          <div className="text-sm pb-3 font-normal leading-5 text-[#191D20F2]">{vaultData.formattedShares} {vaultData.vaultSymbol}</div>
           <div className="text-[11px] pb-1 font-medium leading-4 text-[#191D2080]">User assets</div>
           <div className="text-sm pb-2 font-normal leading-5 text-[#191D20F2]">{vaultData.formattedAssets} {vaultData.assetSymbol}</div>
         </div>
-      </BoxCard>
+      </WithdrawCard>
       : null
   )
 

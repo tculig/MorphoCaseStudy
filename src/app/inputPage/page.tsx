@@ -14,14 +14,18 @@ import { Hash, TransactionReceipt } from "viem";
 import metaMorphoAbi from "../../abi/metaMorpho";
 import { publicClient, walletClient } from "../clients";
 import { TransactionCard } from "@/components/transactionCard";
+import { useRouter } from 'next/navigation';
 
 export default function InputPage() {
-  const [inputText, setInputText] = useState('');
+  const [inputText, setInputText] = useState('0xBEEF01735c132Ada46AA9aA4c54623cAA92A64CB');
   const [inputDebounced] = useDebounce(inputText, 500);
   const { address } = useAccount();
   const [hash, setHash] = useState<Hash>();
-  const [receipt, setReceipt] = useState<TransactionReceipt>();
-  console.log(receipt)
+  const [isPending, setIsPending] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [isFailure, setIsFailure] = useState(false);
+  const [txStarted, setTxStarted] = useState(false);
+  const router = useRouter();
 
   const { data: isValidVault, isError, isLoading } = useReadContract({
     abi: metaMorphoFactoryAbi,
@@ -41,6 +45,8 @@ export default function InputPage() {
   }, [address]);
 
   const redeem = useCallback(() => {
+    setIsPending(true);
+    setTxStarted(true);
     ; (async () => {
       if (!vaultData?.userShares || !address) throw "Invalid address or user shares!";
       const { request } = await publicClient.simulateContract({
@@ -59,7 +65,9 @@ export default function InputPage() {
     ; (async () => {
       if (hash) {
         const receipt = await publicClient.waitForTransactionReceipt({ hash })
-        setReceipt(receipt)
+        setIsPending(false)
+        setIsSuccess(receipt.status=="success");
+        setIsFailure(receipt.status!="success");
       }
     })()
   }, [hash])
@@ -82,13 +90,13 @@ export default function InputPage() {
         key="withdrawComponent"
         className="mt-6"
         header="Flagship ETH"
-        footer={<RainbowButton text="Withdraw userMax" onClick={() => redeem()} disabled={Number(vaultData.userMaxRedeem) == 0} />}
+        footer={<RainbowButton text="Withdraw userMax" onClick={redeem} disabled={Number(vaultData.userMaxRedeem) == 0} />}
       >
         <div className="pt-5 pb-8">
           <div className="text-[11px] pb-1 font-medium leading-4 text-[#191D2080]">User shares</div>
-          <div className="text-sm pb-3 font-normal leading-5 text-[#191D20F2]">{vaultData.formattedShares} {vaultData.vaultSymbol}</div>
+          <div className="text-sm pb-3 font-normal leading-5 text-[#191D20F2]">{vaultData.formattedShares ?? "0.00"} {vaultData.vaultSymbol}</div>
           <div className="text-[11px] pb-1 font-medium leading-4 text-[#191D2080]">User assets</div>
-          <div className="text-sm pb-2 font-normal leading-5 text-[#191D20F2]">{vaultData.formattedAssets} {vaultData.assetSymbol}</div>
+          <div className="text-sm pb-2 font-normal leading-5 text-[#191D20F2]">{vaultData.formattedAssets ?? "0.00"} {vaultData.assetSymbol}</div>
         </div>
       </WithdrawCard>
       : null
@@ -96,19 +104,19 @@ export default function InputPage() {
 
   const TransactionComponent = (
     <TransactionCard
-      className="mt-64"
-      isPending={false}
-      isSuccess={false}
-      isFailure={false}
-      hash= "0xstring"
-      onRetry={()=>{}}
-      onReset={()=>{}}
+      className="mt-52"
+      isPending={isPending}
+      isSuccess={isSuccess}
+      isFailure={isFailure}
+      hash={hash}
+      onRetry={()=>redeem()}
+      onReset={()=>router.refresh()}
     />
   )
 
   const content =
     (() => {
-      if (hash) return TransactionComponent;
+      if (txStarted) return TransactionComponent;
       return [InputComponent, WithdrawComponent];
     })()
 

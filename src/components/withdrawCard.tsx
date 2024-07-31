@@ -24,8 +24,3 @@ const WithdrawCard: FC<PropsWithChildren<Props>> = ({ header, text, footer, chil
 }
 
 export { WithdrawCard };
-
-/*
- <div className="w-full opacity-0" style={{ height:"100%", position: "absolute", top: "6px", left: "96px", backgroundImage: "url('https://postimage.me/images/2024/07/31/withdraw01.png')" }}>
-            </div>
-*/

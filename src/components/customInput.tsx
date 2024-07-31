@@ -22,16 +22,16 @@ const CustomInput: FC<InputProps> = ({ inputText, setInputText, isValid, isInval
                     id="address"
                     name="address"
                     placeholder='0xabc...12345'
-                    className={("w-full overflow-hidden text-ellipsis py-1 ring-0 outline-none bg-transparent ").concat(isInvalid ? "text-[#C73E59]" : "")} />
+                    className={("w-full overflow-hidden text-ellipsis py-1 mr-1 ring-0 outline-none bg-transparent ").concat(isInvalid ? "text-[#C73E59]" : "")} />
                 {isValid ? <Image
                     src={checkIcon}
-                    alt="Logo"
+                    alt="check"
                     width={24}
                     priority
                 /> : null}
                 {isInvalid ? <Image
                     src={alertIcon}
-                    alt="Logo"
+                    alt="alert"
                     width={24}
                     priority
                 /> : null}

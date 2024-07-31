@@ -1,10 +1,11 @@
 'use client';
-import type { FC, PropsWithChildren } from 'react';
+import type { FC } from 'react';
 import { Hash } from 'viem';
 import { RainbowButton } from './rainbowButton';
 import Image from "next/image";
-import checkIcon from "../assets/check.svg";
-import alertIcon from "../assets/alert.svg";
+import checkIcon from "@/assets/check.svg";
+import alertIcon from "@/assets/alert.svg";
+import { VaultInfo } from '@/hooks/useVaultData';
 
 interface Props {
     readonly isPending: boolean,
@@ -14,9 +15,10 @@ interface Props {
     readonly hash: Hash | undefined,
     readonly onRetry: () => void,
     readonly onReset: () => void,
+    readonly vaultData?: VaultInfo,
 }
 
-const TransactionCard: FC<PropsWithChildren<Props>> = ({ isPending, isSuccess, isFailure, hash, className, onRetry, onReset }) => {
+const TransactionCard: FC<Props> = ({ vaultData, isPending, isSuccess, isFailure, hash, className, onRetry, onReset }) => {
 
     const header = (() => {
         if (isPending) return <div className="text-sm font-normal leading-5 text-[#191D20F2]">Your transaction is pending</div>;
@@ -43,7 +45,7 @@ const TransactionCard: FC<PropsWithChildren<Props>> = ({ isPending, isSuccess, i
 
     const text = (() => {
         if (isPending && hash) return <span>View on <a href={`https://etherscan.io/tx/${hash}`} target="_blank" className="underline">Etherscan {'->'}</a></span>
-        if (isSuccess) return <span>You have received xxx.xx $assetSymbol.</span>
+        if (isSuccess) return <span>You have received {vaultData?.userAssets} {vaultData?.assetSymbol}</span>
         if (isFailure) return <span>Please try again.</span>
         return null;
     })();

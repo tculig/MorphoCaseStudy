@@ -116,6 +116,7 @@ export default function InputPage() {
       hash={hash}
       onRetry={()=>redeem()}
       onReset={()=>router.push("/")}
+      vaultData={vaultData}
     />
   )
 

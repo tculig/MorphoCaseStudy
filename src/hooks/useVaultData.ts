@@ -103,3 +103,4 @@ const useVaultData = ({ addressVault, addressUser, enabled }: VaultParams): Vaul
 }
 
 export { useVaultData };
+export type { VaultInfo }

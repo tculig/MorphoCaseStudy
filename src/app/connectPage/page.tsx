@@ -8,7 +8,6 @@ import { BoxCard } from "../../components/boxCard";
 import { useEffect, useMemo } from "react";
 import { useWeb3Modal, useWeb3ModalState } from "@web3modal/wagmi/react";
 import { useAccount } from "wagmi";
-
 import { redirect } from "next/navigation";
 
 export default function ConnectPage() {

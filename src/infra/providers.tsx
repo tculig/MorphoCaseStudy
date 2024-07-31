@@ -1,6 +1,5 @@
 'use client';
 
-import "./globals.css";
 import { createWeb3Modal } from "@web3modal/wagmi/react";
 import { mainnet } from "wagmi/chains";
 import { createConfig, WagmiProvider } from "wagmi";
@@ -10,21 +9,11 @@ import {
   QueryClient,
   QueryClientProvider,
 } from '@tanstack/react-query'
-import { defineChain, http } from "viem";
-
-export const tenderlyChain = defineChain({
-  id: 1,
-  name: 'Tenderly',
-  nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
-  rpcUrls: {
-    default: {
-      http: ['https://virtual.mainnet.rpc.tenderly.co/39b6c299-6d00-4209-bcbe-0325866ccdbc'],
-    },
-  },
-})
+import { http } from "viem";
 
 const projectId = process.env.NEXT_PUBLIC_PROJECT_ID || "";
 const publicRPC = process.env.NEXT_PUBLIC_TENDERLY_NODE_ACCESS_KEY_MAINNET || "";
+const useTenderly = process.env.NEXT_PUBLIC_USE_TENDERLY=="yes" || false;
 
 const wagmiConfig = createConfig({
   chains: [mainnet],
@@ -34,7 +23,7 @@ const wagmiConfig = createConfig({
     safe(),
   ],
   transports: {
-    [mainnet.id]: http(`https://virtual.mainnet.rpc.tenderly.co/${publicRPC}`),
+    [mainnet.id]: useTenderly ? http(`https://virtual.mainnet.rpc.tenderly.co/${publicRPC}`): http(),
   },
 })
 

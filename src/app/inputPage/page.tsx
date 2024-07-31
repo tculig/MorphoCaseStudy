@@ -10,14 +10,19 @@ import { redirect } from "next/navigation";
 import { WithdrawCard } from "@/components/withdrawCard";
 import { RainbowButton } from "@/components/rainbowButton";
 import { CustomInput } from "@/components/customInput";
-import { Hash, TransactionReceipt } from "viem";
+import { Hash } from "viem";
 import metaMorphoAbi from "../../abi/metaMorpho";
-import { publicClient, walletClient } from "../clients";
+import { publicClient, walletClient } from "../../infra/clients";
 import { TransactionCard } from "@/components/transactionCard";
 import { useRouter } from 'next/navigation';
+import Image from "next/image";
+import spinnerIcon from "../../assets/spinner.gif";
+
+//TODO: If this is incorrect the query will silently fail!!
+const morphoFactoryAddress = process.env.NEXT_PUBLIC_MORPHO_FACTORY_ADDRESS;
 
 export default function InputPage() {
-  const [inputText, setInputText] = useState('0xBEEF01735c132Ada46AA9aA4c54623cAA92A64CB');
+  const [inputText, setInputText] = useState('');
   const [inputDebounced] = useDebounce(inputText, 500);
   const { address } = useAccount();
   const [hash, setHash] = useState<Hash>();
@@ -26,20 +31,20 @@ export default function InputPage() {
   const [isFailure, setIsFailure] = useState(false);
   const [txStarted, setTxStarted] = useState(false);
   const router = useRouter();
-
-  const { data: isValidVault, isError, isLoading } = useReadContract({
+  
+  const { data: isValidVault } = useReadContract({
     abi: metaMorphoFactoryAbi,
-    address: '0xA9c3D3a366466Fa809d1Ae982Fb2c46E5fC41101',
+    address: morphoFactoryAddress as `0x${string}`,
     functionName: 'isMetaMorpho',
     args: [inputDebounced as any],
   });
 
-  const vaultData = useVaultData({
+  const {data: vaultData, isLoading: isLoadingVault, isError: isErrorVault} = useVaultData({
     addressVault: inputDebounced,
     addressUser: address,
     enabled: !!isValidVault,
   });
-
+  
   useEffect(() => {
     if (!address) redirect(`/connectPage`);
   }, [address]);
@@ -89,7 +94,7 @@ export default function InputPage() {
       <WithdrawCard
         key="withdrawComponent"
         className="mt-6"
-        header="Flagship ETH"
+        header={vaultData.vaultName}
         footer={<RainbowButton text="Withdraw userMax" onClick={redeem} disabled={Number(vaultData.userMaxRedeem) == 0} />}
       >
         <div className="pt-5 pb-8">
@@ -110,14 +115,22 @@ export default function InputPage() {
       isFailure={isFailure}
       hash={hash}
       onRetry={()=>redeem()}
-      onReset={()=>router.refresh()}
+      onReset={()=>router.push("/")}
     />
+  )
+
+  const Spinner = (
+    (isLoadingVault)  ? <Image src={spinnerIcon} alt="spinner" className="mt-20" key="spinner"/> : null
+  )
+
+  const Error = (
+    (isErrorVault) ? <div className="mt-6" key="error">Something went wrong! Please try again.</div> : null
   )
 
   const content =
     (() => {
       if (txStarted) return TransactionComponent;
-      return [InputComponent, WithdrawComponent];
+      return [InputComponent, Spinner, Error, WithdrawComponent];
     })()
 
   return (

@@ -42,7 +42,7 @@ const TransactionCard: FC<PropsWithChildren<Props>> = ({ isPending, isSuccess, i
     })();
 
     const text = (() => {
-        if (isPending) return <span>View on <a href={`https://etherscan.io/tx/${hash}`} className="underline">Etherscan {'->'}</a></span>
+        if (isPending && hash) return <span>View on <a href={`https://etherscan.io/tx/${hash}`} target="_blank" className="underline">Etherscan {'->'}</a></span>
         if (isSuccess) return <span>You have received xxx.xx $assetSymbol.</span>
         if (isFailure) return <span>Please try again.</span>
         return null;

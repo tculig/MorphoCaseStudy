@@ -2,7 +2,7 @@
 
 import metaMorphoAbi from "../abi/metaMorpho";
 import ERC20Abi from "../abi/ERC20";
-import { publicClient } from '../app/clients'
+import { publicClient } from '../infra/clients'
 import { formatUnits, getContract } from "viem";
 import { useEffect, useState } from "react";
 import { roundToDecimals } from "@/util";
@@ -12,7 +12,6 @@ interface VaultParams {
   readonly addressUser: `0x${string}` | undefined,
   readonly enabled: boolean,
 }
-
 interface VaultInfo {
   vaultName?: string,
   vaultSymbol?: string,
@@ -28,11 +27,21 @@ interface VaultInfo {
   assetDecimals?: number
 }
 
-const useVaultData = ({ addressVault, addressUser, enabled }: VaultParams): VaultInfo | undefined => {
+interface VaultResult {
+  data: VaultInfo | undefined,
+  isLoading: boolean,
+  isError: boolean,
+}
+
+const useVaultData = ({ addressVault, addressUser, enabled }: VaultParams): VaultResult => {
   const [data, setData] = useState<VaultInfo>();
+  const [isLoading, setIsLoading] = useState(false);
+  const [isError, setIsError] = useState(false);
 
   useEffect(() => {
     async function fetchData(): Promise<any> {
+      setIsLoading(true);
+      setIsError(false);
       try {
         const vault = getContract({
           address: addressVault as `0x${string}`,
@@ -77,8 +86,10 @@ const useVaultData = ({ addressVault, addressUser, enabled }: VaultParams): Vaul
           assetSymbol,
           assetDecimals
         })
+        setIsLoading(false);
       } catch (ex) {
-        console.log(ex);
+        setIsLoading(false);
+        setIsError(true);
       }
     };
     if (enabled) fetchData();
@@ -88,7 +99,7 @@ const useVaultData = ({ addressVault, addressUser, enabled }: VaultParams): Vaul
     if (!enabled) setData(undefined);
   }, [enabled]);
 
-  return data;
+  return {data, isLoading, isError};
 }
 
 export { useVaultData };

@@ -21,7 +21,7 @@ Decided to make some components:
 
 Have one data hook for fetching data from the vault (useVaultData).
 
-One util function "roundToDecimals", and I couldn't have that in withoug adding a unit test. 
+One util function "roundToDecimals", and I couldn't have that in without adding a unit test. 
 
 I chose to store the abi data in .ts files instead of .json because viem expects abi to be declared "as const". 
 If I had dozens of abis that have a potential to be changed in the future, I would store them as .json and write a small util function to import them as const. 
@@ -31,9 +31,9 @@ TODO: Pull some constants, like colors, into variables and reuse them. I didn't 
 
 # Blockchain connections
 
-I used viem and wagmi interchengably. If I wanted to make a simple call like "isMetaMorpho" I used wagmi, as it conveniently already wraps the underlying logic into a react hook. For more complicated situations, especially with multiple calls, I used viem (e.g. useVaultData).
+I used viem and wagmi interchangeably. If I wanted to make a simple call like "isMetaMorpho" I used wagmi, as it conveniently already wraps the underlying logic into a react hook. For more complicated situations, especially with multiple calls, I used viem (e.g. useVaultData).
 
-I tested all the functinality on Tenderly and 60% of the time it worked 100% of the time. ;D
+I tested all the functionality on Tenderly and 60% of the time it worked 100% of the time. ;D
 # Other
 
 There is an .env.example file that shows which variables should be present.
@@ -44,7 +44,7 @@ There is an .env.example file that shows which variables should be present.
 - Validate some of the strings that should be addresses, I did a dirty "as `0x${string}`" in few places
 - When showing how much was withdrawn from the vault (waithdraw04), parse the data from the tx receipt instead of the vault data
 
-# Final thougts
+# Final thoughts
 
 This was fun. I hope it was enough to land the job... 
 

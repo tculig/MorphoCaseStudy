@@ -1,36 +1,48 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Instructions
 
-## Getting Started
+Case Study (Web3 Frontend) - Developing a Vault withdrawal app :
+<https://morpho-labs.notion.site/Case-Study-Web3-Frontend-Developing-a-Vault-withdrawal-app-fc0230e148c94b76bc09740f264c2838> 
 
-First, run the development server:
+# Solution
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+Firstly, thank you for taking the time to review my work.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+I'll try and keep this as concise as possible..
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Because I know the stack you're using at Morpho, I started a new Next.js app, with viem, wagmi and react.
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+I split the app into only two screens. In hindsight, I would pull out "withdraw03/04/05" into their own page and would use a context to pass the transaction data from withdraw01/02. Still, it works perfectly as is. 
 
-## Learn More
+Decided to make some components:
+- some templates for the containers (boxCard, transactionCard, withdrawCard)
+- the rainbow button
+- custom input field with the icons
+- top nav component
 
-To learn more about Next.js, take a look at the following resources:
+Have one data hook for fetching data from the vault (useVaultData).
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+One util function "roundToDecimals", and I couldn't have that in withoug adding a unit test. 
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+I chose to store the abi data in .ts files instead of .json because viem expects abi to be declared "as const". 
+If I had dozens of abis that have a potential to be changed in the future, I would store them as .json and write a small util function to import them as const. 
 
-## Deploy on Vercel
+I used tailwind for styling. Not a huge fan of Tailwind myself, but I'm actually starting to warm up to it after using it for the last few days.
+TODO: Pull some constants, like colors, into variables and reuse them. I didn't want to waste time on this at this stage. 
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Blockchain connections
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+I used viem and wagmi interchengably. If I wanted to make a simple call like "isMetaMorpho" I used wagmi, as it conveniently already wraps the underlying logic into a react hook. For more complicated situations, especially with multiple calls, I used viem (e.g. useVaultData).
+
+I tested all the functinality on Tenderly and 60% of the time it worked 100% of the time. ;D
+## Other
+
+There is an .env.example file that shows which variables should be present.
+
+# Final thougts
+
+This was fun. I hope it was enough to land the job... 
+
+Best,
+
+Tiho
+

@@ -32,7 +32,7 @@ export default function InputPage() {
   const [txStarted, setTxStarted] = useState(false);
   const router = useRouter();
   
-  const { data: isValidVault } = useReadContract({
+  const { data: isValidVault, isFetching } = useReadContract({
     abi: metaMorphoFactoryAbi,
     address: morphoFactoryAddress as `0x${string}`,
     functionName: 'isMetaMorpho',
@@ -84,7 +84,7 @@ export default function InputPage() {
         inputText={inputText}
         setInputText={setInputText}
         isValid={!!isValidVault}
-        isInvalid={inputDebounced != "" && !isValidVault}
+        isInvalid={inputDebounced != "" && !isValidVault && !isFetching}
       />
     </div>
   );

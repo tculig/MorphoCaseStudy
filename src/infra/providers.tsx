@@ -12,7 +12,7 @@ import {
 import { http } from "viem";
 
 const projectId = process.env.NEXT_PUBLIC_PROJECT_ID || "";
-const publicRPC = process.env.NEXT_PUBLIC_TENDERLY_NODE_ACCESS_KEY_MAINNET || "";
+const publicRPC = process.env.NEXT_PUBLIC_TENDERLY_NODE_ACCESS_KEY_PUBLIC || "";
 const useTenderly = process.env.NEXT_PUBLIC_USE_TENDERLY=="yes" || false;
 
 const wagmiConfig = createConfig({

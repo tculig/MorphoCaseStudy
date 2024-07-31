@@ -36,7 +36,7 @@ export default function InputPage() {
     abi: metaMorphoFactoryAbi,
     address: morphoFactoryAddress as `0x${string}`,
     functionName: 'isMetaMorpho',
-    args: [inputDebounced as any],
+    args: [inputDebounced as `0x${string}`],
   });
 
   const {data: vaultData, isLoading: isLoadingVault, isError: isErrorVault} = useVaultData({

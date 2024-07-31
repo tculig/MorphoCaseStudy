@@ -29,14 +29,20 @@ If I had dozens of abis that have a potential to be changed in the future, I wou
 I used tailwind for styling. Not a huge fan of Tailwind myself, but I'm actually starting to warm up to it after using it for the last few days.
 TODO: Pull some constants, like colors, into variables and reuse them. I didn't want to waste time on this at this stage. 
 
-## Blockchain connections
+# Blockchain connections
 
 I used viem and wagmi interchengably. If I wanted to make a simple call like "isMetaMorpho" I used wagmi, as it conveniently already wraps the underlying logic into a react hook. For more complicated situations, especially with multiple calls, I used viem (e.g. useVaultData).
 
 I tested all the functinality on Tenderly and 60% of the time it worked 100% of the time. ;D
-## Other
+# Other
 
 There is an .env.example file that shows which variables should be present.
+
+# Possible improvements
+
+- use variables with tailwind
+- Validate some of the strings that should be addresses, I did a dirty "as `0x${string}`" in few places
+- When showing how much was withdrawn from the vault (waithdraw04), parse the data from the tx receipt instead of the vault data
 
 # Final thougts
 

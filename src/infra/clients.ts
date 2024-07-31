@@ -1,4 +1,4 @@
-import { createPublicClient, createWalletClient, http } from "viem"
+import { createPublicClient, createWalletClient, custom, http } from "viem"
 import { mainnet } from "viem/chains"
 
 const publicRPC = process.env.NEXT_PUBLIC_TENDERLY_NODE_ACCESS_KEY_PUBLIC || "";
@@ -12,7 +12,7 @@ const publicClient = createPublicClient({
 
 const walletClient = createWalletClient({
   chain: mainnet,
-  transport: useTenderly ? http(`https://virtual.mainnet.rpc.tenderly.co/${adminRPC}`) : http()
+  transport: useTenderly ? http(`https://virtual.mainnet.rpc.tenderly.co/${adminRPC}`) : custom(window.ethereum!)
 });
 
 export { publicClient, walletClient }

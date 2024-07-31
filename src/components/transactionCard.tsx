@@ -45,7 +45,7 @@ const TransactionCard: FC<Props> = ({ vaultData, isPending, isSuccess, isFailure
 
     const text = (() => {
         if (isPending && hash) return <span>View on <a href={`https://etherscan.io/tx/${hash}`} target="_blank" className="underline">Etherscan {'->'}</a></span>
-        if (isSuccess) return <span>You have received {vaultData?.userAssets} {vaultData?.assetSymbol}</span>
+        if (isSuccess) return <span>You have received {vaultData?.formattedAssets} {vaultData?.assetSymbol}</span>
         if (isFailure) return <span>Please try again.</span>
         return null;
     })();

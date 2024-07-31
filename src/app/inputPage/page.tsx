@@ -6,7 +6,6 @@ import metaMorphoFactoryAbi from "../../abi/metaMorphoFactory";
 import { useAccount, useReadContract } from "wagmi";
 import { useDebounce } from "use-debounce";
 import { useVaultData } from "@/hooks/useVaultData";
-import { redirect } from "next/navigation";
 import { WithdrawCard } from "@/components/withdrawCard";
 import { RainbowButton } from "@/components/rainbowButton";
 import { CustomInput } from "@/components/customInput";
@@ -46,8 +45,8 @@ export default function InputPage() {
   });
   
   useEffect(() => {
-    if (!address) redirect(`/connectPage`);
-  }, [address]);
+    if (!address) router.push("/connectPage");
+  }, [address, router]);
 
   const redeem = useCallback(() => {
     setIsPending(true);

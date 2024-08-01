@@ -16,6 +16,7 @@ import { TransactionCard } from "@/components/transactionCard";
 import { useRouter } from 'next/navigation';
 import Image from "next/image";
 import spinnerIcon from "../../assets/spinner.gif";
+import { isAddress } from 'viem'
 
 //TODO: If this is incorrect the query will silently fail!!
 const morphoFactoryAddress = process.env.NEXT_PUBLIC_MORPHO_FACTORY_ADDRESS;
@@ -30,18 +31,24 @@ export default function InputPage() {
   const [isFailure, setIsFailure] = useState(false);
   const [txStarted, setTxStarted] = useState(false);
   const router = useRouter();
+  const isValidAddress = isAddress(inputDebounced);
   
   const { data: isValidVault, isFetching } = useReadContract({
     abi: metaMorphoFactoryAbi,
     address: morphoFactoryAddress as `0x${string}`,
     functionName: 'isMetaMorpho',
     args: [inputDebounced as `0x${string}`],
+    query:{
+      enabled: isValidAddress
+    }
   });
+
+  const isValidInput = isValidAddress && isValidVault;
 
   const {data: vaultData, isLoading: isLoadingVault, isError: isErrorVault} = useVaultData({
     addressVault: inputDebounced,
     addressUser: address,
-    enabled: !!isValidVault,
+    enabled: !!isValidInput,
   });
   
   useEffect(() => {
@@ -82,14 +89,16 @@ export default function InputPage() {
       <CustomInput
         inputText={inputText}
         setInputText={setInputText}
-        isValid={!!isValidVault}
-        isInvalid={inputDebounced != "" && !isValidVault && !isFetching}
+        isValid={!!isValidInput}
+        isInvalid={ inputDebounced!="" && !isValidAddress}
+        isNotVault={isValidVault==false}
+        isFetching={isFetching}
       />
     </div>
   );
 
   const WithdrawComponent = (
-    vaultData ?
+    (isValidInput && vaultData) ?
       <WithdrawCard
         key="withdrawComponent"
         className="mt-6"

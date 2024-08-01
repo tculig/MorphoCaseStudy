@@ -67,8 +67,12 @@ export default function InputPage() {
         functionName: 'redeem',
         args: [vaultData?.userShares, address, address]
       })
-      const hash = await walletClient.writeContract(request);
-      setHash(hash)
+      walletClient.writeContract(request).then(hash=>{
+        setHash(hash)
+      }).catch(() => {
+        setIsFailure(true);
+      });
+      
     })()
   }, [address, inputDebounced, vaultData?.userShares])
 

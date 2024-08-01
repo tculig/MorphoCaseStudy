@@ -33,7 +33,7 @@ TODO: Pull some constants, like colors, into variables and reuse them. I didn't 
 
 I used viem and wagmi interchangeably. If I wanted to make a simple call like "isMetaMorpho" I used wagmi, as it conveniently already wraps the underlying logic into a react hook. For more complicated situations, especially with multiple calls, I used viem (e.g. useVaultData).
 
-I tested all the functionality on Tenderly and 60% of the time it worked 100% of the time. ;D
+I tested all the functionality on Tenderly and mainnet.
 # Other
 
 There is an .env.example file that shows which variables should be present.

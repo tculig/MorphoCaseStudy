@@ -9,7 +9,7 @@ import { roundToDecimals } from "@/util";
 
 interface VaultParams {
   readonly addressVault: string,
-  readonly addressUser: `0x${string}`,
+  readonly addressUser: `0x${string}` | undefined,
   readonly enabled: boolean,
 }
 interface VaultInfo {
@@ -47,6 +47,8 @@ const useVaultData = ({ addressVault, addressUser, enabled }: VaultParams): Vaul
           address: addressVault as `0x${string}`,
           abi: metaMorphoAbi,
         } as const;
+
+        if (!addressUser) throw "Address is undefined";
 
         const call1results = await publicClient.multicall({
           contracts: [

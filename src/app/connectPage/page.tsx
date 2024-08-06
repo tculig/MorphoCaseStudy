@@ -4,11 +4,11 @@ import Image from "next/image";
 import lightIcon from "../../assets/light.svg";
 import alertIcon from "../../assets/alert.svg";
 import { RainbowButton } from "../../components/rainbowButton";
-import { BoxCard } from "../../components/boxCard";
 import { useEffect, useMemo } from "react";
 import { useWeb3Modal, useWeb3ModalState } from "@web3modal/wagmi/react";
 import { useAccount } from "wagmi";
 import { redirect } from "next/navigation";
+import { BoxCard } from "@/components/BoxCard";
 
 export default function ConnectPage() {
   const { open } = useWeb3Modal();

@@ -38,15 +38,11 @@ const useVaultData = ({ addressVault, addressUser, enabled }: VaultParams): Vaul
   const [data, setData] = useState<VaultInfo>();
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
-  const sessionRef = useRef(0);
 
   useEffect(() => {
     async function fetchData(): Promise<void> {
       setIsLoading(true);
       setIsError(false);
-      // For stale request rejection tracking
-      const sessionNumber = sessionRef.current + 1;
-      sessionRef.current = sessionNumber;
 
       try {
         const morphoContract = {
@@ -158,10 +154,9 @@ const useVaultData = ({ addressVault, addressUser, enabled }: VaultParams): Vaul
 
         if (Object.values(result).includes(undefined)) throw "Something went wrong"
 
-        if (sessionNumber == sessionRef.current) {
-          setData(result)
-          setIsLoading(false);
-        }
+        setData(result)
+        setIsLoading(false);
+
       } catch (ex) {
         setIsLoading(false);
         setIsError(true);

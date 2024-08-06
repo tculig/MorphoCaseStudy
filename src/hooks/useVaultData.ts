@@ -4,7 +4,7 @@ import metaMorphoAbi from "../abi/metaMorpho";
 import ERC20Abi from "../abi/ERC20";
 import { publicClient } from '../infra/clients'
 import { formatUnits, getContract } from "viem";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { roundToDecimals } from "@/util";
 
 interface VaultParams {
@@ -37,11 +37,16 @@ const useVaultData = ({ addressVault, addressUser, enabled }: VaultParams): Vaul
   const [data, setData] = useState<VaultInfo>();
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
+  const sessionRef = useRef(0);
 
   useEffect(() => {
-    async function fetchData(): Promise<any> {
+    async function fetchData(): Promise<void> {
       setIsLoading(true);
       setIsError(false);
+      // For stale request rejection tracking
+      const sessionNumber = sessionRef.current + 1;
+      sessionRef.current = sessionNumber;
+
       try {
         const morphoContract = {
           address: addressVault as `0x${string}`,
@@ -49,7 +54,6 @@ const useVaultData = ({ addressVault, addressUser, enabled }: VaultParams): Vaul
         } as const;
 
         if (!addressUser) throw "Address is undefined";
-
         const call1results = await publicClient.multicall({
           contracts: [
             {
@@ -150,8 +154,10 @@ const useVaultData = ({ addressVault, addressUser, enabled }: VaultParams): Vaul
 
         if (Object.values(result).includes(undefined)) throw "Something went wrong"
 
-        setData(result)
-        setIsLoading(false);
+        if(sessionNumber==sessionRef.current){
+          setData(result)
+          setIsLoading(false);
+        }
       } catch (ex) {
         setIsLoading(false);
         setIsError(true);

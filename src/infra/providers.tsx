@@ -10,6 +10,8 @@ import {
   QueryClientProvider,
 } from '@tanstack/react-query'
 import { http } from "viem";
+import { ThemeProvider } from "styled-components";
+import { theme } from "@/styled/theme";
 
 const projectId = process.env.NEXT_PUBLIC_PROJECT_ID || "";
 const publicRPC = process.env.NEXT_PUBLIC_TENDERLY_NODE_ACCESS_KEY_PUBLIC || "";
@@ -42,7 +44,9 @@ const Providers: FC<PropsWithChildren> = ({ children }) => {
 
         <WagmiProvider config={wagmiConfig}>
           <QueryClientProvider client={queryClient}>
+          <ThemeProvider theme={theme}>
             {children}
+            </ThemeProvider>
           </QueryClientProvider>
         </WagmiProvider>
 

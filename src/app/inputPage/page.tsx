@@ -11,12 +11,13 @@ import { RainbowButton } from "@/components/rainbowButton";
 import { CustomInput } from "@/components/customInput";
 import { Hash } from "viem";
 import metaMorphoAbi from "../../abi/metaMorpho";
-import { publicClient, walletClient } from "../../infra/clients";
 import { TransactionCard } from "@/components/transactionCard";
 import { useRouter } from 'next/navigation';
 import Image from "next/image";
 import spinnerIcon from "../../assets/spinner.gif";
 import { isAddress } from 'viem'
+import { wagmiConfig } from "@/infra/providers";
+import { writeContract, simulateContract, waitForTransactionReceipt } from '@wagmi/core'
 
 //TODO: If this is incorrect the query will silently fail!!
 const morphoFactoryAddress = process.env.NEXT_PUBLIC_MORPHO_FACTORY_ADDRESS;
@@ -60,26 +61,22 @@ export default function InputPage() {
     setTxStarted(true);
     ; (async () => {
       if (!vaultData?.userShares || !address) throw "Invalid address or user shares!";
-      const { request } = await publicClient.simulateContract({
+      const { request } = await simulateContract(wagmiConfig, {
         account: address,
         address: inputDebounced as `0x${string}`,
         abi: metaMorphoAbi,
         functionName: 'redeem',
         args: [vaultData?.userShares, address, address]
       })
-      walletClient.writeContract(request).then(hash=>{
-        setHash(hash)
-      }).catch(() => {
-        setIsFailure(true);
-      });
-      
+      const hash = await writeContract(wagmiConfig, request)
+      setHash(hash);
     })()
   }, [address, inputDebounced, vaultData?.userShares])
 
   useEffect(() => {
     ; (async () => {
       if (hash) {
-        const receipt = await publicClient.waitForTransactionReceipt({ hash })
+        const receipt = await waitForTransactionReceipt(wagmiConfig, { hash })
         setIsPending(false)
         setIsSuccess(receipt.status=="success");
         setIsFailure(receipt.status!="success");

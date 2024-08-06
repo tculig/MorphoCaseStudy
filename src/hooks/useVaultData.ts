@@ -2,10 +2,11 @@
 
 import metaMorphoAbi from "../abi/metaMorpho";
 import ERC20Abi from "../abi/ERC20";
-import { publicClient } from '../infra/clients'
 import { formatUnits } from "viem";
 import { useEffect, useRef, useState } from "react";
 import { roundToDecimals } from "@/util";
+import { readContracts } from "@wagmi/core";
+import { wagmiConfig } from "@/infra/providers";
 
 interface VaultParams {
   readonly addressVault: string,
@@ -54,7 +55,7 @@ const useVaultData = ({ addressVault, addressUser, enabled }: VaultParams): Vaul
         } as const;
 
         if (!addressUser) throw "Address is undefined";
-        const call1results = await publicClient.multicall({
+        const call1results = await readContracts(wagmiConfig, {
           contracts: [
             {
               ...morphoContract,
@@ -85,6 +86,9 @@ const useVaultData = ({ addressVault, addressUser, enabled }: VaultParams): Vaul
           ]
         });
 
+        // TODO: This would have been nicer but we loose exact typings. Find custom type or helper function to handle this gracefully.
+        // const [vaultName, vaultSymbol, vaultDecimals, vaultAsset, userShares, userMaxRedeem] = call1results.map(el=>el.status == "success" ? el.result : undefined);
+
         const vaultName = call1results[0]?.status == "success" ? call1results[0]?.result : undefined;
         const vaultSymbol = call1results[1]?.status == "success" ? call1results[1]?.result : undefined;
         const vaultDecimals = call1results[2]?.status == "success" ? call1results[2]?.result : undefined;
@@ -92,9 +96,9 @@ const useVaultData = ({ addressVault, addressUser, enabled }: VaultParams): Vaul
         const userShares = call1results[4]?.status == "success" ? call1results[4]?.result : undefined;
         const userMaxRedeem = call1results[5]?.status == "success" ? call1results[5]?.result : undefined;
 
-        if (!userShares || !userMaxRedeem) throw "Something went wrong";
+        if (userShares == undefined || userMaxRedeem == undefined) throw "Something went wrong";
 
-        const call2results = await publicClient.multicall({
+        const call2results = await readContracts(wagmiConfig, {
           contracts: [
             {
               ...morphoContract,
@@ -117,7 +121,7 @@ const useVaultData = ({ addressVault, addressUser, enabled }: VaultParams): Vaul
           abi: ERC20Abi,
         } as const;
 
-        const call3results = await publicClient.multicall({
+        const call3results = await readContracts(wagmiConfig, {
           contracts: [
             {
               ...assetContract,
@@ -133,10 +137,10 @@ const useVaultData = ({ addressVault, addressUser, enabled }: VaultParams): Vaul
         const assetSymbol = call3results[0]?.status == "success" ? call3results[0]?.result : undefined;
         const assetDecimals = call3results[1]?.status == "success" ? call3results[1]?.result : undefined;
 
-        if (!vaultDecimals || !assetDecimals) throw "Something went wrong";
+        if (vaultDecimals == undefined || assetDecimals == undefined) throw "Something went wrong";
 
-        const formattedShares = userShares ? roundToDecimals(formatUnits(userShares, vaultDecimals), 2).toFixed(2) : undefined;
-        const formattedAssets = userAssets ? roundToDecimals(formatUnits(userAssets, assetDecimals), 2).toFixed(2) : undefined;
+        const formattedShares = userShares != undefined ? roundToDecimals(formatUnits(userShares, vaultDecimals), 2).toFixed(2) : undefined;
+        const formattedAssets = userAssets != undefined ? roundToDecimals(formatUnits(userAssets, assetDecimals), 2).toFixed(2) : undefined;
         const result = {
           vaultName,
           vaultSymbol,
@@ -154,7 +158,7 @@ const useVaultData = ({ addressVault, addressUser, enabled }: VaultParams): Vaul
 
         if (Object.values(result).includes(undefined)) throw "Something went wrong"
 
-        if(sessionNumber==sessionRef.current){
+        if (sessionNumber == sessionRef.current) {
           setData(result)
           setIsLoading(false);
         }

@@ -13,6 +13,7 @@ import { http } from "viem";
 
 const projectId = process.env.NEXT_PUBLIC_PROJECT_ID || "";
 const publicRPC = process.env.NEXT_PUBLIC_TENDERLY_NODE_ACCESS_KEY_PUBLIC || "";
+const adminRPC = process.env.NEXT_PUBLIC_TENDERLY_NODE_ACCESS_KEY_ADMIN || "";
 const useTenderly = process.env.NEXT_PUBLIC_USE_TENDERLY=="yes" || false;
 
 const wagmiConfig = createConfig({
@@ -39,7 +40,6 @@ const Providers: FC<PropsWithChildren> = ({ children }) => {
   return (
     <>
       {ready ? (
-
         <WagmiProvider config={wagmiConfig}>
           <QueryClientProvider client={queryClient}>
             {children}
@@ -52,4 +52,4 @@ const Providers: FC<PropsWithChildren> = ({ children }) => {
 }
 
 
-export { Providers }
+export { Providers, wagmiConfig }

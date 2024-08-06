@@ -3,7 +3,7 @@
 import metaMorphoAbi from "../abi/metaMorpho";
 import ERC20Abi from "../abi/ERC20";
 import { publicClient } from '../infra/clients'
-import { formatUnits, getContract } from "viem";
+import { formatUnits } from "viem";
 import { useEffect, useRef, useState } from "react";
 import { roundToDecimals } from "@/util";
 

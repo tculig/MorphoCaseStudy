@@ -9,7 +9,7 @@ import { roundToDecimals } from "@/util";
 
 interface VaultParams {
   readonly addressVault: string,
-  readonly addressUser: `0x${string}` | undefined,
+  readonly addressUser: `0x${string}`,
   readonly enabled: boolean,
 }
 interface VaultInfo {
@@ -43,36 +43,95 @@ const useVaultData = ({ addressVault, addressUser, enabled }: VaultParams): Vaul
       setIsLoading(true);
       setIsError(false);
       try {
-        const vault = getContract({
+        const morphoContract = {
           address: addressVault as `0x${string}`,
           abi: metaMorphoAbi,
-          client: publicClient,
+        } as const;
+
+        const call1results = await publicClient.multicall({
+          contracts: [
+            {
+              ...morphoContract,
+              functionName: 'name',
+            },
+            {
+              ...morphoContract,
+              functionName: 'symbol',
+            },
+            {
+              ...morphoContract,
+              functionName: 'decimals'
+            },
+            {
+              ...morphoContract,
+              functionName: 'asset'
+            },
+            {
+              ...morphoContract,
+              functionName: 'balanceOf',
+              args: [addressUser]
+            },
+            {
+              ...morphoContract,
+              functionName: 'maxRedeem',
+              args: [addressUser]
+            }
+          ]
         });
 
-        const vaultName = await vault.read.name();
-        const vaultSymbol = await vault.read.symbol();
-        const vaultDecimals = await vault.read.decimals();
-        const vaultAsset = await vault.read.asset();
+        const vaultName = call1results[0]?.status == "success" ? call1results[0]?.result : undefined;
+        const vaultSymbol = call1results[1]?.status == "success" ? call1results[1]?.result : undefined;
+        const vaultDecimals = call1results[2]?.status == "success" ? call1results[2]?.result : undefined;
+        const vaultAsset = call1results[3]?.status == "success" ? call1results[3]?.result : undefined;
+        const userShares = call1results[4]?.status == "success" ? call1results[4]?.result : undefined;
+        const userMaxRedeem = call1results[5]?.status == "success" ? call1results[5]?.result : undefined;
 
-        const userShares = addressUser ? await vault.read.balanceOf([addressUser]) : undefined;
-        const userAssets = userShares ? await vault.read.convertToAssets([userShares]) : undefined;
+        if (!userShares || !userMaxRedeem) throw "Something went wrong";
 
-        const userMaxRedeem = addressUser ? await vault.read.maxRedeem([addressUser]) : undefined;
-        const userMaxWithdraw = userMaxRedeem ? await vault.read.convertToAssets([userMaxRedeem]) : undefined;
+        const call2results = await publicClient.multicall({
+          contracts: [
+            {
+              ...morphoContract,
+              functionName: 'convertToAssets',
+              args: [userShares]
+            },
+            {
+              ...morphoContract,
+              functionName: 'convertToAssets',
+              args: [userMaxRedeem]
+            }
+          ]
+        });
 
-        const asset = getContract({
-          address: vaultAsset,
+        const userAssets = call2results[0]?.status == "success" ? call2results[0]?.result : undefined;
+        const userMaxWithdraw = call2results[1]?.status == "success" ? call2results[1]?.result : undefined;
+
+        const assetContract = {
+          address: vaultAsset!,
           abi: ERC20Abi,
-          client: publicClient,
+        } as const;
+
+        const call3results = await publicClient.multicall({
+          contracts: [
+            {
+              ...assetContract,
+              functionName: 'symbol',
+            },
+            {
+              ...assetContract,
+              functionName: 'decimals',
+            }
+          ]
         });
 
-        const assetSymbol = await asset.read.symbol();
-        const assetDecimals = await asset.read.decimals();
+        const assetSymbol = call3results[0]?.status == "success" ? call3results[0]?.result : undefined;
+        const assetDecimals = call3results[1]?.status == "success" ? call3results[1]?.result : undefined;
+
+        if (!vaultDecimals || !assetDecimals) throw "Something went wrong";
 
         const formattedShares = userShares ? roundToDecimals(formatUnits(userShares, vaultDecimals), 2).toFixed(2) : undefined;
         const formattedAssets = userAssets ? roundToDecimals(formatUnits(userAssets, assetDecimals), 2).toFixed(2) : undefined;
-
-        setData({
+        const result = {
           vaultName,
           vaultSymbol,
           vaultDecimals,
@@ -85,7 +144,11 @@ const useVaultData = ({ addressVault, addressUser, enabled }: VaultParams): Vaul
           formattedAssets,
           assetSymbol,
           assetDecimals
-        })
+        };
+
+        if (Object.values(result).includes(undefined)) throw "Something went wrong"
+
+        setData(result)
         setIsLoading(false);
       } catch (ex) {
         setIsLoading(false);
@@ -99,7 +162,7 @@ const useVaultData = ({ addressVault, addressUser, enabled }: VaultParams): Vaul
     if (!enabled) setData(undefined);
   }, [enabled]);
 
-  return {data, isLoading, isError};
+  return { data, isLoading, isError };
 }
 
 export { useVaultData };

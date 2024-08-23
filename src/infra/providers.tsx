@@ -10,12 +10,12 @@ import {
   QueryClientProvider,
 } from '@tanstack/react-query'
 import { http } from "viem";
+import { GlobalClientCode } from "./globalClientCode";
 import { ThemeProvider } from "styled-components";
 import { theme } from "@/styled/theme";
 
 const projectId = process.env.NEXT_PUBLIC_PROJECT_ID || "";
 const publicRPC = process.env.NEXT_PUBLIC_TENDERLY_NODE_ACCESS_KEY_PUBLIC || "";
-const adminRPC = process.env.NEXT_PUBLIC_TENDERLY_NODE_ACCESS_KEY_ADMIN || "";
 const useTenderly = process.env.NEXT_PUBLIC_USE_TENDERLY=="yes" || false;
 
 const wagmiConfig = createConfig({
@@ -26,7 +26,7 @@ const wagmiConfig = createConfig({
     safe(),
   ],
   transports: {
-    [mainnet.id]: useTenderly ? http(`https://virtual.mainnet.rpc.tenderly.co/${publicRPC}`): http(),
+    [mainnet.id]: useTenderly ? http(`https://virtual.mainnet.rpc.tenderly.co/${publicRPC}`) : http(),
   },
 })
 
